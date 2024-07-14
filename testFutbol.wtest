@@ -1,0 +1,64 @@
+import futbol.*
+
+describe "tests del futbol" {
+
+  const grupo = 
+    new Partido(equipo1 = "Can",equipo2 = "Arg")
+  const cuartos = 
+    new Partido(equipo1 = "Arg", equipo2 = "Ecu")
+  const semi = 
+    new Partido(equipo1 = "Arg",equipo2 = "Can")
+  
+  const grupo2 = 
+    new Partido(equipo1 = "Per",equipo2 = "Arg",
+    jugadas = [new Jugada(jugador = messi,minuto=30),
+    new JugadaArco(jugador = messi,minuto=40),
+    new JugadaArco(jugador = dimaria,minuto = 50),
+    new JugadaArco(jugador = carlos,minuto = 80),
+    new Jugada(jugador = messi,minuto=89)
+       ])
+  const messi = new Jugador(equipo = "Arg")
+  const dimaria = new Jugador(equipo = "Arg")
+  const carlos = new Jugador(equipo = "Per")
+  
+  const diego = new Jugador(equipo = "Arg",esEstrella = true)
+  
+  const golIngleses = new JugadaVar(jugador = diego, minuto = 59, circunstancias = ["Mano"])
+
+  test "Cuantas veces se jugo un mismo partido" {
+    fifa.agregarPartido(grupo)
+    fifa.agregarPartido(cuartos)
+    fifa.agregarPartido(semi)
+    assert.equals(2,fifa.cuantasVecesJugo("Arg","Can"))
+  }
+
+  test "adversario de un equipo" {
+    assert.equals("Can",semi.adversario("Arg"))
+  }
+
+  test "cantidad de goles en un partido para cada equipo" {
+    assert.equals(2, grupo2.goles("Arg"))
+    assert.equals(1, grupo2.goles("Per"))
+  }
+  test "ganador del partido " {
+    assert.that(grupo2.gano("Arg"))
+  }
+  test "fue entretenido al final " {
+    assert.that(grupo2.fueMasEntretenido())
+  }
+
+  test "Var en modo Fifa convalida gol a jugador estrella pese a ser con la mano"{
+    elVar.modo(modoFifa)
+    assert.that(golIngleses.fueGol("Arg"))
+  }
+  test "Var en modo justo no convalida gol con la mano"{
+    elVar.modo(modoJusticia)
+    assert.notThat(golIngleses.fueGol("Arg"))
+  }
+
+  test "Var en modo mas goles convalida gol "{
+    elVar.modo(modoMasGoles)
+    assert.that(golIngleses.fueGol("Arg"))
+  }
+
+}
